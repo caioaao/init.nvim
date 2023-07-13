@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup {
-	ensure_installed = { "lua_ls", "rust_analyzer", "elixirls", "tsserver", "gopls" },
+	ensure_installed = { "lua_ls", "rust_analyzer", "elixirls", "tsserver", "gopls", "svelte" },
 }
 
 
@@ -43,8 +43,8 @@ cmp.setup {
 		end, { 'i', 's' }),
 	}),
 	sources = {
-	{name = 'nvim-lsp' },
-	{name = 'luasnip'},
+		{ name = 'nvim-lsp' },
+		{ name = 'luasnip' },
 	},
 }
 
