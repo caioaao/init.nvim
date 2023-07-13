@@ -1,1 +1,2 @@
-print("hello here")
+vim.wo.number = true
+
