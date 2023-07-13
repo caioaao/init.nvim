@@ -3,18 +3,50 @@ require("mason-lspconfig").setup {
 	ensure_installed = { "lua_ls", "rust_analyzer", "elixirls", "tsserver", "gopls" },
 }
 
--- Setup language servers.
+
+-- Setup language servers with autocomplete capabilities
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local lspconfig = require('lspconfig')
-lspconfig.tsserver.setup {}
-lspconfig.lua_ls.setup {}
-lspconfig.elixirls.setup {}
-lspconfig.rust_analyzer.setup {
-	-- Server-specific settings. See `:help lspconfig-setup`
-	settings = {
-		['rust-analyzer'] = {},
+local servers = { 'lua_ls', 'tsserver', 'elixirls', 'gopls', 'rust_analyzer' }
+
+for _, lsp in ipairs(servers) do
+	lspconfig[lsp].setup {
+		capabilities = capabilities,
+	}
+end
+
+-- nvim-cmp setup
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
+cmp.setup {
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	mapping = cmp.mapping.preset.insert({
+		['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
+		['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+		['<C-Space>'] = cmp.mapping.complete(),
+		['<CR>'] = cmp.mapping.confirm {
+			behavior = cmp.ConfirmBehavior.Replace,
+			select = true,
+		},
+		['<Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end, { 'i', 's' }),
+	}),
+	sources = {
+	{name = 'nvim-lsp' },
+	{name = 'luasnip'},
 	},
 }
-
 
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
@@ -26,8 +58,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 vim.api.nvim_create_autocmd('LspAttach', {
 	group = vim.api.nvim_create_augroup('UserLspConfig', {}),
 	callback = function(ev)
-		-- Enable completion triggered by <c-x><c-o>
-		vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+		vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]]
 
 		-- Buffer local mappings.
 		-- See `:help vim.lsp.*` for documentation on any of the below functions
