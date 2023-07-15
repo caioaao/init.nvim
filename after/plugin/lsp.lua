@@ -7,7 +7,7 @@ require("mason-lspconfig").setup {
 -- Setup language servers with autocomplete capabilities
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local lspconfig = require('lspconfig')
-local servers = { 'lua_ls', 'tsserver', 'elixirls', 'gopls', 'rust_analyzer' }
+local servers = { 'lua_ls', 'tsserver', 'elixirls', 'gopls', 'rust_analyzer', "svelte" }
 
 for _, lsp in ipairs(servers) do
 	lspconfig[lsp].setup {
