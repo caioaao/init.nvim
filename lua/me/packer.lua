@@ -53,6 +53,8 @@ return require('packer').startup(function(use)
 		end
 	}
 
+	use({ "elixir-tools/elixir-tools.nvim", tag = "stable", requires = { "nvim-lua/plenary.nvim" } })
+
 	if packer_bootstrap then
 		require('packer').sync()
 	end
