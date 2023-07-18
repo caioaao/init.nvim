@@ -17,5 +17,6 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
 			vim.cmd.Git({ 'pull', '--rebase' })
 		end, opts)
 		vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
+		vim.keymap.set("n", "<leader>c", ":Git checkout origin/main -b ", opts);
 	end,
 })
