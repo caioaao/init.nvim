@@ -55,6 +55,8 @@ return require('packer').startup(function(use)
 
 	use({ "elixir-tools/elixir-tools.nvim", tag = "stable", requires = { "nvim-lua/plenary.nvim" } })
 
+	use 'simrat39/symbols-outline.nvim'
+
 	if packer_bootstrap then
 		require('packer').sync()
 	end
